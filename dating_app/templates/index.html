@@ -1,0 +1,137 @@
+<head>
+    <link rel= "stylesheet" type= "text/css" href= "../static/style.css">
+</head>
+<body>
+    <div class="input_fields">
+        <p>Diet lifestyle</p>
+        <div class="slidecontainer"> <!-- https://www.w3schools.com/howto/howto_js_rangeslider.asp -->
+            <input type="range" min="1" max="100" value="50" class="slider" id="Diet">
+        </div>
+        <p id="Diet_value">0</p>
+        <p>Drink habits</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Drink">
+        </div>
+        <p id="Drink_value">0</p>
+        <p>Smoke habits</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Smoke">
+        </div>
+        <p id="Smoke_value">0</p>
+        <p>Education</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Education">
+        </div>
+        <p id="Education_value">0</p>
+        <p>Location</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Location">
+        </div>
+        <p id="Location_value">0</p>
+        <p>Religion</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Religion">
+        </div>
+        <p id="Religion_value">0</p>
+        <p>Starsign</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Starsign">
+        </div>
+        <p id="Starsign_value">0</p>
+        <p>Pets</p>
+        <div class="slidecontainer"> 
+            <input type="range" min="1" max="100" value="50" class="slider" id="Pets">
+        </div>
+        <p id="Pets_value">0</p>
+        <br>
+        <br>
+        <button class="submit" onclick="submit_data()">Submit</button>
+    </div>
+    <div class="input_fields">
+        <p id="output">output</p>
+    </div>
+</body>
+<script>
+    var diet_slider = document.getElementById("Diet");
+    var diet_output = document.getElementById("Diet_value");
+    var drink_slider = document.getElementById("Drink");
+    var drink_output = document.getElementById("Drink_value");
+    var smoke_slider = document.getElementById("Smoke");
+    var smoke_output = document.getElementById("Smoke_value");
+    var education_slider = document.getElementById("Education");
+    var education_output = document.getElementById("Education_value");
+    var location_slider = document.getElementById("Location");
+    var location_output = document.getElementById("Location_value");
+    var religion_slider = document.getElementById("Religion");
+    var religion_output = document.getElementById("Religion_value");
+    var starsign_slider = document.getElementById("Starsign");
+    var starsign_output = document.getElementById("Starsign_value");
+    var pets_slider = document.getElementById("Pets");
+    var pets_output = document.getElementById("Pets_value");
+    diet_output.innerHTML = diet_slider.value;
+    drink_output.innerHTML = drink_slider.value;
+    smoke_output.innerHTML = smoke_slider.value;
+    education_output.innerHTML = education_slider.value;
+    location_output.innerHTML = location_slider.value;
+    religion_output.innerHTML = religion_slider.value;
+    starsign_output.innerHTML = starsign_slider.value;
+    pets_output.innerHTML = pets_slider.value;
+
+    // Update the current slider value (each time you drag the slider handle)
+    diet_slider.oninput = function() {
+        diet_output.innerHTML = this.value;
+    }
+
+    drink_slider.oninput = function() {
+        drink_output.innerHTML = this.value;
+    }
+
+    smoke_slider.oninput = function() {
+        smoke_output.innerHTML = this.value;
+    }
+
+    education_slider.oninput = function() {
+        education_output.innerHTML = this.value;
+    }
+
+    location_slider.oninput = function() {
+        location_output.innerHTML = this.value;
+    }
+
+    religion_slider.oninput = function() {
+        religion_output.innerHTML = this.value;
+    }
+
+    starsign_slider.oninput = function() {
+        starsign_output.innerHTML = this.value;
+    }
+
+    pets_slider.oninput = function() {
+        pets_output.innerHTML = this.value;
+    }
+
+    function submit_data(){
+        submit_preferences()
+        const url = 'http://localhost:8000/match'
+        fetch(url)
+        .then(response => response.json())  
+        .then(json => {
+            console.log(json);
+            document.getElementById("output").innerHTML = JSON.stringify(json)
+        })
+    }
+
+    function submit_preferences(){
+        var diet = diet_output.innerHTML
+        var drink = drink_output.innerHTML
+        var smoke = smoke_output.innerHTML
+        var education = education_output.innerHTML
+        var location = location_output.innerHTML
+        var religion = religion_output.innerHTML
+        var starsign = starsign_output.innerHTML
+        var pets = pets_output.innerHTML
+        const url = `http://localhost:8000/submit?diet=${diet}&drink=${drink}&smoke=${smoke}&education=${education}&location=${location}&religion=${religion}&starsign=${starsign}&pets=${pets}`
+        fetch(url)
+    }
+
+</script>

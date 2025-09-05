@@ -1,0 +1,1 @@
+Ik neem mee uit deze les dat ik mij veel meer bezig moet houden met het algemene concept en het design dat daaruit volgt.
