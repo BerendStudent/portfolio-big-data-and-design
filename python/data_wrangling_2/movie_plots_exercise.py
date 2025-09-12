@@ -10,13 +10,31 @@ import pandas as pd
 
 #1. First, download the movie_plots.csv file from Canvas and open it
 
+data_location = "python\data_wrangling_2\movie_plots.csv"
+df = pd.read_csv(data_location, sep=",", encoding="ISO-8859-1", on_bad_lines='skip')
+
 #2. Let's inspect the data. Display the first rows and get the summary (.info)
+print(df.loc[0])
 
 #3. Print out the number of movies for each Origin/Ethnicity
+origins = {}
+
+for index, row in df.iterrows():
+    current_origin = row['Origin/Ethnicity']
+    if current_origin in origins:
+        origins[current_origin] += 1
+    else:
+        origins[current_origin] = 1
+
+sorted_dict = dict(sorted(origins.items(), key=lambda item: item[1], reverse=True))
+for i in sorted_dict:
+    print(i, origins[i])
 
 #4. Subsetting: select only the rows with Bollywood movies
+print(df.loc[df['Origin/Ethnicity'] == 'Bollywood'])
 
 #5. Subsetting: select only the rows with Turkish movies released after 2000
+print(df.loc[df['Origin/Ethnicity'] == 'Turkish' & df['Release Year'] > 2000])
 
 #6. Subsetting: create a new df with only Title, Release Year, Origin/Ethnicity, Plot
 
