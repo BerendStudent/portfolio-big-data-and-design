@@ -7,6 +7,7 @@ oreo = {
 }
 
 oreo_nutrition = {}
+overeating = False
 
 for field in oreo:
     oreo_nutrition[field] = oreo[field] / 2
