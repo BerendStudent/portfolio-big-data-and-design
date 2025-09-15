@@ -17,3 +17,22 @@ We hebben een charmante uitwerking voor een datingapp bedacht, en het geeft veel
 Neem de feedback mee naar volgende projecten en deze manier van ontwikkeling, inzicht op het algoritme, is interessant om mee te nemen naar volgende projecten.
  
 **Prijs**: Beste data & AI ontwikkeling!
+
+# Tech Opdracht 1
+
+Hoi Berend,
+Keurige code met werkende functionaliteit volgens opdracht! 
+Paar verbeterpuntjes niet expliciet genoemd in de opdracht zouden zijn:
+
+Eenheden ook vermelden in dictionary namen b.v. energie_kcal (dit doe je grotendeels wel in de output, maar let op het zijn kilocalorieen)
+Wat # comments toevoegen b.v. waar de data vandaan komt
+Een else toevoegen aan de if voor gevallen <= 750
+
+
+# Design opdracht 1
+
+## Leerdoel 1
+Je brengt interessante controverses aan, die zeker op dit moment spelen. Je laat (zeer) duidelijk zien waar jij staat in de controverses. Ik mis echter een analyse van wie de verschillende stakeholders zijn in deze controverses. Als je dat duidelijker maakt is het ook beter mogelijk een controverse te beschrijven en minder jouw eigen stelling.
+
+## Leerdoel 2
+Op dit moment heb je relevante bronnen gevonden rondom elke controverse. Dardoor heb je nu een goede basis om mee door te kunnen gaan. Wel zou je nog wat scherper in kunnen gaan op de datasets, je doet al enkele suggesties voor datasets maar hier moet je nu mee bezig.Want welke controverse spreekt je het meest aan, en zijn hier ook genoeg databronnen bij te vinden?
