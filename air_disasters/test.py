@@ -19,3 +19,4 @@ for i in range(0, 10):
     top_crasher = list(sorted_dict)[i]
     print(top_crasher)
     print(sorted_dict[top_crasher])
+

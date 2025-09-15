@@ -15,30 +15,41 @@ df = pd.read_csv(data_location, sep=",", encoding="ISO-8859-1", on_bad_lines='sk
 
 #2. Let's inspect the data. Display the first rows and get the summary (.info)
 print(df.loc[0])
+print(df.info)
 
 #3. Print out the number of movies for each Origin/Ethnicity
-origins = {}
+def get_number_of_origins(df): 
+    """
+    Returns a sorted dictionary with the number of movies with each origin
+    Example code:
+    for i in get_number_of_origins(df):
+        print(i, origins[i])
+    """
+    origins = {}
+    for index, row in df.iterrows():
+        current_origin = row['Origin/Ethnicity']
+        if current_origin in origins:
+            origins[current_origin] += 1
+        else:
+            origins[current_origin] = 1
+    sorted_dict = dict(sorted(origins.items(), key=lambda item: item[1], reverse=True))
+    
+    return sorted_dict
 
-for index, row in df.iterrows():
-    current_origin = row['Origin/Ethnicity']
-    if current_origin in origins:
-        origins[current_origin] += 1
-    else:
-        origins[current_origin] = 1
-
-sorted_dict = dict(sorted(origins.items(), key=lambda item: item[1], reverse=True))
-for i in sorted_dict:
-    print(i, origins[i])
 
 #4. Subsetting: select only the rows with Bollywood movies
 print(df.loc[df['Origin/Ethnicity'] == 'Bollywood'])
 
 #5. Subsetting: select only the rows with Turkish movies released after 2000
-print(df.loc[df['Origin/Ethnicity'] == 'Turkish' & df['Release Year'] > 2000])
+print(df.loc[(df['Origin/Ethnicity'] == 'Turkish') & (df['Release Year'] > 2000)])
 
 #6. Subsetting: create a new df with only Title, Release Year, Origin/Ethnicity, Plot
+new_df = df[['Title', 'Release Year', 'Origin/Ethnicity', 'Plot']]
+print(new_df)
 
 #7. Change the column names to Title, Year, Origin, Plot. Find online how to this.
+new_df = new_df.rename(columns={'Release Year': 'Year', 'Origin/Ethnicity': 'Origin'})
+print(new_df.columns)
 
 ##This is where the basic section ends.##
 ##Advanced section: for a more challenging assignment, try (some of) the steps below##
@@ -46,9 +57,18 @@ print(df.loc[df['Origin/Ethnicity'] == 'Turkish' & df['Release Year'] > 2000])
 #8. Create a new column "kimono" that is True if the Plot contains the word "kimono"
 #and false if not (tip: find a suitable Pandas string method).
 #Tip: use Pandas .astype(int) to convert the resulting Boolean in 0 or 1.
+new_df["kimono"] = False
+for index, row in df.iterrows():
+        current_plot = row['Plot']
+        if "Kimono" in current_plot:
+            new_df[row]["kimono"] = True
+
+print(new_df)
 
 #9. Using your new column, pd.groupby() and another Pandas function, count the number of movies
 #with "kimono" in the plot, for the different origins.
+for country, group in new_df.groupby('Origin'):
+    print(country)
 
 #10. Using your earlier code, create a function add_word_present() with one argument (word),
 #that adds a column df[word] with a 1 if the word occurs in the plot,
