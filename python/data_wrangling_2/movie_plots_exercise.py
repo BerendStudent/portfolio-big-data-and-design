@@ -27,7 +27,7 @@ def get_number_of_origins(df):
         print(i)
     """
     origins = {}
-    for index, row in df.iterrows():
+    for index, row in df.iterrows(): # Index is left unused, but is required for the loop logic to work
         current_origin = row['Origin/Ethnicity']
         if current_origin in origins:
             origins[current_origin] += 1
@@ -70,7 +70,7 @@ def add_word_present(expected_str, target_df = new_df, new_column_name = "", typ
     has_gun_df = add_word_present("gun", new_df, "has_gun", int, True)
     """
     if new_column_name == "": # if left empty
-        new_column_name = expected_str
+        new_column_name = expected_str # just default to the string
 
     if literal: #Adds word termination markers, to check for exclusively the full word
         expected_str = f"\b{expected_str}\b"
@@ -141,10 +141,11 @@ def percentage_of_movies(word):
     Example code:
     percentage_of_movies("gun")
     """
-    percentages = {}
+    percentages = {} # Stored as float
     worded_df = add_word_present(word)
     origins = compare_column(word, 'Origin', worded_df)
     total_movie_numbers = worded_df.groupby(["Origin"])[word].count().to_dict()
+    
     for country in origins:
         percentages[country] = origins[country] / total_movie_numbers[country]
     
