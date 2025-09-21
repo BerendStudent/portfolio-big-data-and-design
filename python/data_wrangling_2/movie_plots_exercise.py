@@ -10,7 +10,7 @@ import pandas as pd
 
 #1. First, download the movie_plots.csv file from Canvas and open it
 
-data_location = "python\data_wrangling_2\movie_plots.csv"
+data_location = "python\data_wrangling_2\movie_plots.csv" #Dataset from canvas
 df = pd.read_csv(data_location, sep=",", encoding="ISO-8859-1", on_bad_lines='skip')
 
 #2. Let's inspect the data. Display the first rows and get the summary (.info)
@@ -108,13 +108,19 @@ print(origins)
 #that adds a column df[word] with a 1 if the word occurs in the plot,
 #and 0 if not.
 #Extra challenge: make sure that it's not counted if it's inside another word.
-has_gun_df = add_word_present("gun", new_df, "has_gun", int, True)
+has_gun_df = add_word_present("gun", type=int, literal=True) # Already wrote this function, so I'm reusing it.
 print(has_gun_df.loc[0])
 
 #11. Write another function compare_origins() with one argument (word), that:
 #1. adds a column to your data frame (simply call your earlier function)
 #2. prints the proportion of movies for different origins containing that word
 def compare_origins(word):
+    """
+    Prints the amount of times a word is featured in the plot of a movie, sorted by country.
+
+    Example code:
+    compare_origins("gun")
+    """
     worded_df = add_word_present(word)
     origins = compare_column(word, 'Origin', worded_df)
     for country in origins:
@@ -155,6 +161,7 @@ percentage_of_movies("gun")
 #as a comment
 
 """
+Percentage of movies whose plot contain the word: gun
 American: 18.79%
 Japanese: 12.54%
 Australian: 12.15%
