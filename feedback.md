@@ -36,3 +36,12 @@ Je brengt interessante controverses aan, die zeker op dit moment spelen. Je laat
 
 ## Leerdoel 2
 Op dit moment heb je relevante bronnen gevonden rondom elke controverse. Dardoor heb je nu een goede basis om mee door te kunnen gaan. Wel zou je nog wat scherper in kunnen gaan op de datasets, je doet al enkele suggesties voor datasets maar hier moet je nu mee bezig.Want welke controverse spreekt je het meest aan, en zijn hier ook genoeg databronnen bij te vinden?
+
+
+# Design opdracht 2
+
+# Leerdoel 2
+Je bent bezig geweest om een verhaal te vertellen, in data visualisatie en in tekst. Je geeft aan dat dit dit nieuw is voor je, maar je geeft jezelf wel duidelijke aanbevelingen voor de volgende stap. Ga hier verder mee aan de slag!
+
+# Leerdoel 3
+Je hebt twee visualisaties gemaakt die meerdere datapunten hebben per grafiek. De soorten grafieken zijn nog vrij traditioneel. Ook is is erweinig houvast voor je lezer om de “boodschap” van het verhaal te ontdekken; dit zou opgelost kunnen worden door meer tekst/verklaringen toe te voegen. Wel laat je zien dat je door hebt waar je bent in het proces van je project en waar je naar toe moet. Deze ene controverse is dus zeker niet verkeerd uitgewerkt op dit moment, de opdracht was alleen om 2 concepten uit te werken.
