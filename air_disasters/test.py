@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def extract_fatalities_and_occupants(df):
@@ -80,9 +81,82 @@ def plot_crashes_vs_fatality_rate(df):
     plt.tight_layout()
     plt.show()
 
+
+def plot_age_vs_fatality_rate(df):
+    """
+    Plots Aircraft Age vs Fatality Rate, summarized by Aircraft Type categories,
+    with a trend line showing overall relationship.
+    """
+    # Convert date columns
+    df["accident_date"] = pd.to_datetime(df["accident_date"], errors="coerce")
+    df["first_flight"] = pd.to_datetime(df["first_flight"].str.split(" ").str[0], errors="coerce")
+
+    # Calculate age in years
+    df["AircraftAge"] = (df["accident_date"] - df["first_flight"]).dt.days / 365.25
+
+    # Drop rows missing age or fatality rate
+    clean_df = df.dropna(subset=["AircraftAge", "FatalityRate", "airplane_type"]).copy()
+
+    # Summarize aircraft types into broader categories
+    def categorize_type(x: str) -> str:
+        x = str(x).lower()
+        if "airbus" in x:
+            return "Airbus"
+        elif "boeing" in x:
+            return "Boeing"
+        elif "cessna" in x:
+            return "Cessna"
+        elif "embraer" in x:
+            return "Embraer"
+        elif "bombardier" in x or "canadair" in x:
+            return "Bombardier"
+        elif "antonov" in x or "tupolev" in x or "ilyushin" in x:
+            return "Soviet/Russian"
+        else:
+            return "Other/Unknown"
+
+    clean_df["TypeCategory"] = clean_df["airplane_type"].apply(categorize_type)
+
+    # Scatter plot
+    plt.figure(figsize=(12, 6))
+    for category, group in clean_df.groupby("TypeCategory"):
+        plt.scatter(
+            group["AircraftAge"],
+            group["FatalityRate"] * 100,
+            label=category,
+            alpha=0.6
+        )
+
+    # Add overall trend line
+    x = pd.to_numeric(clean_df["AircraftAge"], errors="coerce")
+    y = pd.to_numeric(clean_df["FatalityRate"] * 100, errors="coerce")
+    mask = x.notna() & y.notna()
+    x_clean = x[mask]
+    y_clean = y[mask]
+
+    if len(x_clean) > 1:  # Only fit if enough points
+        coeffs = np.polyfit(x_clean, y_clean, 1)  # linear fit
+        poly = np.poly1d(coeffs)
+        xs = np.linspace(x_clean.min(), x_clean.max(), 200)
+        plt.plot(xs, poly(xs), color="black", linewidth=2, linestyle="--", label="Trend Line")
+
+    # Labels and legend
+    plt.title("Aircraft Age vs Fatality Rate by Aircraft Type")
+    plt.xlabel("Aircraft Age (years)")
+    plt.ylabel("Fatality Rate (%)")
+    plt.gca().invert_xaxis()
+    plt.legend(title="Aircraft Type Category", bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.tight_layout()
+    plt.show()
+
+
+
 data_location = "air_disasters/data/airdisaster(in).csv"
 
 df = pd.read_csv(data_location, sep=";", encoding="ISO-8859-1", skiprows=1, on_bad_lines="skip")
 df = extract_fatalities_and_occupants(df)
 stats = airline_statistics(df, 10)
 plot_crashes_vs_fatality_rate(stats)
+
+# New graph
+plot_age_vs_fatality_rate(df)
