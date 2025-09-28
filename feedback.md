@@ -45,3 +45,7 @@ Je bent bezig geweest om een verhaal te vertellen, in data visualisatie en in te
 
 # Leerdoel 3
 Je hebt twee visualisaties gemaakt die meerdere datapunten hebben per grafiek. De soorten grafieken zijn nog vrij traditioneel. Ook is is erweinig houvast voor je lezer om de “boodschap” van het verhaal te ontdekken; dit zou opgelost kunnen worden door meer tekst/verklaringen toe te voegen. Wel laat je zien dat je door hebt waar je bent in het proces van je project en waar je naar toe moet. Deze ene controverse is dus zeker niet verkeerd uitgewerkt op dit moment, de opdracht was alleen om 2 concepten uit te werken.
+
+# Tech opdracht 2
+
+Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje analyse mee te geven op het eind
