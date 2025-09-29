@@ -26,5 +26,6 @@ Het opzetten van deze data heeft mij enige tijd gekost. Ik heb namelijk nog nooi
 [2]https://www.cbs.nl/nl-nl/maatwerk/2025/37/energie-en-broeikasgassen-1990-2024 (Tabel 6b) <br>
 [3]https://www.cowi.com/news-and-press/news/2023/comparing-co2-emissions-from-different-energy-sources/ <br>
 [4]https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf#page=7 <br>
+[5]https://www.sciencedirect.com/science/article/pii/S0160412096001122
 
 
