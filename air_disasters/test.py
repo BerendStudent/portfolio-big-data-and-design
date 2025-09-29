@@ -86,18 +86,17 @@ def plot_age_vs_fatality_rate(df):
     """
     Plots Aircraft Age vs Fatality Rate, summarized by Aircraft Type categories,
     with a trend line showing overall relationship.
+
+    Example code:
     """
-    # Convert date columns
+
     df["accident_date"] = pd.to_datetime(df["accident_date"], errors="coerce")
     df["first_flight"] = pd.to_datetime(df["first_flight"].str.split(" ").str[0], errors="coerce")
 
-    # Calculate age in years
-    df["AircraftAge"] = (df["accident_date"] - df["first_flight"]).dt.days / 365.25
+    df["AircraftAge"] = (df["accident_date"] - df["first_flight"]).dt.days / 365.25 #convert to days (365.25 days in a year)
 
-    # Drop rows missing age or fatality rate
     clean_df = df.dropna(subset=["AircraftAge", "FatalityRate", "airplane_type"]).copy()
 
-    # Summarize aircraft types into broader categories
     def categorize_type(x: str) -> str:
         x = str(x).lower()
         if "airbus" in x:
@@ -117,7 +116,6 @@ def plot_age_vs_fatality_rate(df):
 
     clean_df["TypeCategory"] = clean_df["airplane_type"].apply(categorize_type)
 
-    # Scatter plot
     plt.figure(figsize=(12, 6))
     for category, group in clean_df.groupby("TypeCategory"):
         plt.scatter(
@@ -127,7 +125,6 @@ def plot_age_vs_fatality_rate(df):
             alpha=0.6
         )
 
-    # Add overall trend line
     x = pd.to_numeric(clean_df["AircraftAge"], errors="coerce")
     y = pd.to_numeric(clean_df["FatalityRate"] * 100, errors="coerce")
     mask = x.notna() & y.notna()
@@ -140,7 +137,6 @@ def plot_age_vs_fatality_rate(df):
         xs = np.linspace(x_clean.min(), x_clean.max(), 200)
         plt.plot(xs, poly(xs), color="black", linewidth=2, linestyle="--", label="Trend Line")
 
-    # Labels and legend
     plt.title("Aircraft Age vs Fatality Rate by Aircraft Type")
     plt.xlabel("Aircraft Age (years)")
     plt.ylabel("Fatality Rate (%)")
@@ -157,6 +153,4 @@ df = pd.read_csv(data_location, sep=";", encoding="ISO-8859-1", skiprows=1, on_b
 df = extract_fatalities_and_occupants(df)
 stats = airline_statistics(df, 10)
 plot_crashes_vs_fatality_rate(stats)
-
-# New graph
 plot_age_vs_fatality_rate(df)
