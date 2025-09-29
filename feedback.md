@@ -49,3 +49,12 @@ Je hebt twee visualisaties gemaakt die meerdere datapunten hebben per grafiek. D
 # Tech opdracht 2
 
 Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje analyse mee te geven op het eind
+
+
+
+# Feedback Pete op Data Story
+
+* Let op dat mijn data story wel over kernenergie gaat, en niet alleen bangmakerij is over steenkool
+* Kijk goed naar de tools die ik gebruik voor het genereren van mijn grafieken
+* Handgemaakte visualizaties mogen wel, maar met goede beredenering in de video
+* Prober zo veel mogelijk met code te genereren, en als iets met de hand moet, dat uit de code-representaties halen
