@@ -73,3 +73,10 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Introductie toevoegen, ik ga nu direct in op de grafieken
 * Veiligheid valt onder afval
 * Beter argumenten weerleggen, verhaal is nu geheel pro-kern energie
+
+# Feedback Hendrik op Eindproduct Data Story
+* Interessant idee en data
+* Goed nagedacht over metaforen om verhaal ervan te maken (zeppelin)
+* Nu nog eerste schets
+* Verhaal sterker, graphics leesbaarder
+* denk na over narratieve structuur (inleiding hoofdstuk zit al in) maar begin bij iets persoonlijks, maak breed, maak daarna meer dun
