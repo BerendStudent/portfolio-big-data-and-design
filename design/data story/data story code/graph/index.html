@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="graph.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <canvas id="frame1" width="500" height="500" style="background:white;"></canvas>
+        <canvas id="frame2" width="500" height="500" style="background:white;"></canvas>
+        <canvas id="frame3" width="500" height="500" style="background:white;"></canvas>
+        <canvas id="frame4" width="500" height="500" style="background:white;"></canvas>
+    </main>
+    <script>
+    window.onload = function() {
+    var stacked_bar_data = [
+        [10, [6.7, 39.3, 36.5, 5.56, 1.51]]
+    ];
+
+    var stackedBarGraph = new Graph('frame1', 500, 'stackedBar', {
+        title: "Energieopbrengst Nederland",
+        yLabel: "TJ",
+        font: "12px Arial",
+        fontColor: "black"
+    });
+
+    var bar_data = [[1, 820], [2, 490], [3, 48], [4, 12], [5, 12]];
+    var bar_graph = new Graph('frame4', 500, 'bar', {
+        title: "Lifecycle co2 uitstoot",
+        yLabel: "g/kWh",
+        font: "12px Arial",
+        fontColor: "black"
+    });
+    bar_graph.createFrame(bar_data);
+
+    stackedBarGraph.createFrame(stacked_bar_data);
+
+    var line_data = [[1989, 8.89], [1990, 8.7], [1991, 8.62], [1992, 8.41], [1993, 8.51], [1994, 8.56], [1995, 8.8], [1996, 9.03], [1997, 8.98], [1998, 8.74], [1999, 8.86], [2000, 9.2], [2001, 9.26], [2002, 9.68], [2003, 10.52], [2004, 10.87], [2005, 11.55], [2006, 12.19], [2007, 12.78], [2008, 13.2], [2009, 13.05], [2010, 13.95], [2011, 14.74], [2012, 14.91], [2013, 15], [2014, 15.02], [2015, 14.67], [2016, 14.34], [2017, 14.51], [2018, 14.75], [2019, 14.69], [2020, 14.21], [2021, 15.13], [2022, 15.19], [2023, 15.4]];
+    var line_graph = new Graph('frame2', 500, 'line', {
+        title: "CO2 uitstoot door steenkoolverbranding",
+        xLabel: "Jaar",
+        yLabel: "Miljard ton co2",
+        showPointLabels: true,
+        font: "10px Arial",
+        fontColor: "black"
+    });
+    line_graph.createFrame(line_data);
+
+    var solar_line_data = [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 1], [8, 2], [9, 4], [10, 8], [11, 9], [12, 9.8], [13, 9.95], [14, 10], [15, 9.95], [16, 9.55], [17, 8.6], [18, 6.3], [19, 4.5], [20, 1.8], [21, 0], [22, 0], [23, 0]];
+    var solar_line_graph = new Graph('frame3', 500, 'line', {
+        title: "Zonne energie verwachting per uur",
+        xLabel: "Uur",
+        yLabel: "MW",
+        showPointLabels: true,
+        font: "10px Arial",
+        fontColor: "black"
+    });
+    solar_line_graph.createFrame(solar_line_data);
+    };
+
+    
+    </script>
+</body>
+</html>

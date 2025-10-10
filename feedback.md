@@ -58,3 +58,11 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Kijk goed naar de tools die ik gebruik voor het genereren van mijn grafieken
 * Handgemaakte visualizaties mogen wel, maar met goede beredenering in de video
 * Prober zo veel mogelijk met code te genereren, en als iets met de hand moet, dat uit de code-representaties halen
+
+# Feedback Hendrik op Data Story
+
+* Denk aan het verhaal dat ik wil vertellen
+* Voor wie maak je dit?
+* Kijk naar relevante data; Uitstoot over tijd is misschien niet interessant als je alleen maar ziet dat het allemaal efficienter is geworden
+* 'Normale' grafieken zijn niet erg, maar een mooie vorm is ook leuk
+* Goed standpunten opzetten en argumenten weerleggen.
