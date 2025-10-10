@@ -66,3 +66,10 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Kijk naar relevante data; Uitstoot over tijd is misschien niet interessant als je alleen maar ziet dat het allemaal efficienter is geworden
 * 'Normale' grafieken zijn niet erg, maar een mooie vorm is ook leuk
 * Goed standpunten opzetten en argumenten weerleggen.
+
+
+# Feedback Pete op Eindproduct Data Story
+* Meer verhaal vertellen, minder feiten inschuiven
+* Introductie toevoegen, ik ga nu direct in op de grafieken
+* Veiligheid valt onder afval
+* Beter argumenten weerleggen, verhaal is nu geheel pro-kern energie
