@@ -18,7 +18,11 @@ Ik heb van Luuc als feedback ontvangen dat mijn graphing tool technisch gezien e
 Van Pete kreeg ik feedback dat mijn technische opdrachten netjes en gestructureerd waren, maar dat er nog meer aandacht mocht zijn voor kleine details, zoals consistente comments en uitleg bij code. Dit leek in eerste instantie een klein punt, maar ik realiseer me dat dit juist belangrijk is voor de leesbaarheid en overdraagbaarheid van mijn werk. Ik heb daarom geprobeerd om in latere opdrachten mijn code beter te documenteren en mijn gedachtengang toe te lichten, zodat ook anderen mijn redeneringen kunnen volgen.
 
 ## Ontwikkeling
-Ik begon deze minor al met erg sterke tech vaardigheden, doordat mijn vooropleiding in technische informatica was. Ik heb hierom niet veel voortgang geboekt met de python opdrachten, omdat ik deze kennis al had. Ik heb wel, door het maken van mijn graphing tool, erg veel geleerd met betrekking tot mijn tech skills, ondanks dat dit niet in het lespakket zat.
+Ik begon deze minor met een stevige technische basis, omdat ik een achtergrond heb in technische informatica. Daardoor had ik bij de meeste Python-opdrachten relatief weinig moeite. Toch heb ik geprobeerd om mezelf te blijven uitdagen, onder andere door eigen projecten op te pakken die verder gingen dan de standaard opdrachten. Een goed voorbeeld daarvan is mijn graphing tool.
+
+Hoewel de meeste studenten gebruikmaakten van bestaande visualisatielibraries zoals Matplotlib, besloot ik om zelf een eenvoudige graphing library te schrijven. Ik deed dit niet omdat het moest, maar omdat ik wilde begrijpen hoe zulke tools werken op een laag niveau. Door dit te doen, heb ik beter inzicht gekregen in hoe visualisatiepakketten omgaan met schaalverdeling, coördinaten, en rendering in HTML5-canvas.
+
+Daarnaast heb ik tijdens de workshops veel geleerd over Natural Language Processing (NLP). Hoewel ik hier al theoretische kennis over had, was het waardevol om te zien hoe deze technieken praktisch worden toegepast in data-analyse en tekstmining. Dit heeft mijn interesse in taalmodellen en machine learning verder versterkt.
 
 ## Uitvoering
 Het eerste deel van dit semester heb ik alle tech opdrachten volledig afgerond. Dit heb ik zonder problemen kunnen doen, doordat ik de voorkennis al had die deze opdrachten bedoeld waren om aan te leren. Ik heb wel erg veel van de workshop kunnen leren, omdat er voor text mining veel gebruik gemaakt wordt van Natural Language Processing. Dit was puur theoretische kennis, maar ik denk dat dit wel erg handig wordt voor mijn toekomstige werk.
@@ -48,7 +52,9 @@ De opdrachten gingen erg goed. Ik heb de opdrachten over data visualization, dat
 De grootste uitdaging op het gebied van tech was het uitzoeken van uitdagingen op het gebied van tech. Ik heb dit blok specifiek gekozen voor moeilijkere opdrachten, zoals met mijn graphing tool en met de data wrangling opdrachten, omdat ik daar voor de air disasters pdf koos.
 
 ## Tegenslagen
-Ik heb erg veel tijd verspilt aan mijn graphing tool die beter in andere aspecten van mijn data story gestoken hadden kunnen worden.
+Een van de grootste tegenslagen was dat ik veel tijd heb geïnvesteerd in mijn graphing tool, terwijl deze uiteindelijk weinig bijdroeg aan mijn data story. Met de kennis van nu had ik waarschijnlijk beter een bestaande library kunnen gebruiken, zodat ik meer tijd had gehad voor de inhoudelijke kant van mijn visualisatie. Toch zie ik het niet als verspilde moeite: het project heeft me geholpen om mijn JavaScript-kennis te verdiepen en beter te begrijpen hoe visualisatie werkt op technisch niveau.
 
 ## Doelen
 In het volgende blok krijgen wij les over UX design, Natural Language Processing, en data visualization. Dit zijn onderwerpen waar ik al wel een technische achtergrond in heb, maar waar ik niet ver ontwikkeld in ben. Ik hoop vooral meer te leren over UX design, omdat dit echt een gebied is waar ik niet veel over weet.
+
+Daarnaast wil ik meer leren over het combineren van data-analyse met storytelling. Mijn doel is om niet alleen iets te maken dat werkt, maar ook iets dat mensen begrijpend en interessant vinden. Ik denk dat de volgende modules mij zullen helpen om die brug te slaan tussen techniek en communicatie.
