@@ -80,3 +80,11 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Nu nog eerste schets
 * Verhaal sterker, graphics leesbaarder
 * denk na over narratieve structuur (inleiding hoofdstuk zit al in) maar begin bij iets persoonlijks, maak breed, maak daarna meer dun
+
+
+# Feedback op Double Diamond Design
+* POV is heel belangrijk
+* Iedereen moet met POV bezig zijn
+* Combineer team vaardigheden
+* Denk aan je doelgroep
+* Denk aan IKEA, aan routes en aan hoe je eruit komt. Ook over dat je dingen zelf kan doen.
