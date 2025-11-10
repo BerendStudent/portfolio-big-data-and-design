@@ -88,3 +88,8 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Combineer team vaardigheden
 * Denk aan je doelgroep
 * Denk aan IKEA, aan routes en aan hoe je eruit komt. Ook over dat je dingen zelf kan doen.
+
+# Feedback op Leesgroep Surveillance Capitalism
+* Goed uitgelegd
+* Interessante stellingen
+* Goede ethiek
