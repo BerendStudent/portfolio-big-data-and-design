@@ -93,3 +93,6 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Goed uitgelegd
 * Interessante stellingen
 * Goede ethiek
+
+# Feedback Wireframe
+ik heb van Duncan als feedback ontvangen dat mijn wireframes op een onjuiste manier gemaakt zijn
