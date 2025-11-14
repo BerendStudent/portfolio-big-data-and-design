@@ -95,4 +95,5 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 * Goede ethiek
 
 # Feedback Wireframe
-ik heb van Duncan als feedback ontvangen dat mijn wireframes op een onjuiste manier gemaakt zijn
+* Ik heb van Duncan als feedback ontvangen dat mijn wireframes op een onjuiste manier gemaakt zijn
+* Ik moet ook denken aan hoe haalbaar een demo van mijn idee voor een plantenboek is
