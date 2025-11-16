@@ -15,12 +15,16 @@ for i in range(0, len(random_word)):
     guessed.append('_')
 
 delimeter = ""
+incorrectly_placed = []
 
 def process_guess(guess, guessed_array, target):
+    incorrectly_placed = []
     for i in range(0, len(guessed_array)):
         if guess[i] == target[i]:
             guessed_array[i] = target[i]
-    return guessed_array
+        elif guess[i] in target and guess[i] not in incorrectly_placed:
+            incorrectly_placed.append(guess[i])
+    return guessed_array, incorrectly_placed
 
 def check_victory(guessed_array, target):
     for i in range(0, len(target)):
@@ -34,7 +38,10 @@ while True:
     if len(word) != len(random_word):
         print('Incorrect length!')
         continue
-    guessed = process_guess(word, guessed, random_word)
+    guessed, incorrectly_placed = process_guess(word, guessed, random_word)
     if check_victory(guessed, random_word):
         print(f'Victory! The word was: {random_word}')
         break
+    else:
+        if len(incorrectly_placed) != 0:
+            print(f'Right letters in wrong places: {delimeter.join(incorrectly_placed)}')
