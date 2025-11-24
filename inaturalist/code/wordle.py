@@ -23,8 +23,6 @@ def process_guess(guess, guessed_array, target):
         if guess[i] == target[i]:
             guessed_array[i] = target[i]
         elif guess[i] in target and count_letters(guess, guess[i]) > count_letters(incorrectly_placed, guess[i]):
-            print(count_letters(guess, guess[i]))
-            print(count_letters(incorrectly_placed, guess[i]))
             incorrectly_placed.append(guess[i])
     return guessed_array, incorrectly_placed
 
