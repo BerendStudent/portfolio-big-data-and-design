@@ -101,6 +101,12 @@ class MoneyChecker:
         if df is None:
             df = self.data
         df['booking_date'] = pd.to_datetime(df['booking_date'])
+        begin_date = pd.to_datetime(start)
+        end_date = pd.to_datetime(end)
+
+        if begin_date > end_date:
+            raise ValueError("Start date must be before end date")
+        
         return df[(df['booking_date'] >= start) & (df['booking_date'] <= end)]
 
     def getTransactionsByBankAccount(self, relation_iban : str, df=None):
@@ -178,6 +184,69 @@ class MoneyChecker:
         df = df.loc[df['category'] == category]
 
         return df
+    
+    def getExpensesByCategory(self, df=None):
+        if df is None:
+            df = self.data
+
+        expenses = {}
+
+        for _, row in df.iterrows():
+            if row['category'] not in expenses:
+                expenses[row['category']] = 0
+
+        for id in expenses:
+            transactions = self.getTransactionsByCategory(id, df)
+            flow = self.getExpenses(transactions)
+            expenses[id] = int(flow)
+        
+        sorted_expenses = sorted(expenses.items(), key=lambda item: item[1], reverse=True)
+
+        return dict(sorted_expenses)
+
+    def getAverageExpenses(self, start: str = '2000-01-01', end: str = '2100-01-01', df=None):
+        if df is None:
+            df = self.data
+
+        begin_date = pd.to_datetime(start)
+        end_date = pd.to_datetime(end)
+
+        subset = self.getTransactionsByDateRange(start, end, df)
+
+        expenses = self.getExpenses(subset)
+
+        months = (end_date.year - begin_date.year) * 12 + (end_date.month - begin_date.month) + 1
+
+        return expenses / months if months > 0 else 0
+
+    def getAverageMonthlyExpenses(self, start: str = '2000-01-01', end: str = '2100-01-01', df=None):
+        if df is None:
+            df = self.data
+
+        subset = self.getTransactionsByDateRange(start, end, df).copy()
+
+        subset["booking_date"] = pd.to_datetime(subset["booking_date"])
+
+        subset["year_month"] = subset["booking_date"].dt.to_period("M").astype(str)
+
+        monthly_expenses = {}
+
+        for year_month in subset["year_month"].unique():
+            month_df = subset[subset["year_month"] == year_month]
+
+            expense_value = self.getExpenses(month_df)
+            monthly_expenses[year_month] = int(expense_value)
+
+        total_value = 0
+        months = 0
+
+        for month in monthly_expenses:
+            total_value += monthly_expenses[month]
+            months += 1
+        
+        average = total_value / months
+
+        return average
 
 
 
@@ -194,7 +263,7 @@ Account = MoneyChecker(df)
 
 #print(Account.getProfits(transactions_2024))
 
-#print(Account.getCashOnHand())
+#print(Account.getCashOnHand('2025-01-01'))
 
 #print(Account.getTransactionsByBankAccount('xxxxxx'))
 
@@ -202,4 +271,10 @@ Account = MoneyChecker(df)
 
 #print(Account.topCustomersByMoneyFlow())
 
-print(Account.getExpenses((Account.getTransactionsByDateRange('2024-01-01', '2024-02-01'))))
+#print(Account.getExpenses((Account.getTransactionsByDateRange('2024-01-01', '2024-02-01'))))
+
+#print(Account.getExpensesByCategory())
+
+#print(Account.getExpenses(Account.getTransactionsByDescription('Drankenspeciali')))
+
+print(Account.getAverageMonthlyExpenses())
