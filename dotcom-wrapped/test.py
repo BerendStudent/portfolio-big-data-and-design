@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('dotcom-wrapped/data/wrapped_bank_account_1.csv', on_bad_lines="skip")
+df = pd.read_csv('dotcom-wrapped/data/wrapped_bank_account_4.csv', on_bad_lines="skip")
 
 class MoneyChecker:
     '''
@@ -13,6 +13,8 @@ class MoneyChecker:
 
     def __init__(self, data):
         self.data = data
+        data['description'] = data['description'].replace('', pd.NA).fillna('')
+
     
     def checkBank(self, string : str):
         string = string.lower()
@@ -28,6 +30,7 @@ class MoneyChecker:
 
         Returns TRUE if the transaction is valid, FALSE if it is exempt
         '''
+
         string = string.lower()
         wordlist = string.split()
         for word in wordlist:
@@ -121,7 +124,7 @@ class MoneyChecker:
             df = self.data
 
         revenue = df.loc[
-            (df['flow'] == 'inflow') & (df['description'].apply(self.checkExemptions)),
+            (df['flow'] == 'inflow') & (df['description'].apply(self.checkExemptions) & (df['category'] != 'Internal transfers')),
             'amount'
         ].sum()
 
@@ -133,7 +136,7 @@ class MoneyChecker:
             df = self.data
         
         expenses = df.loc[
-            (df['flow'] == 'outflow') & (df['description'].apply(self.checkExemptions)),
+            (df['flow'] == 'outflow') & (df['description'].apply(self.checkExemptions) & (df['category'] != 'Internal transfers')),
             'amount'
         ].sum()
 
@@ -204,20 +207,6 @@ class MoneyChecker:
 
         return dict(sorted_expenses)
 
-    def getAverageExpenses(self, start: str = '2000-01-01', end: str = '2100-01-01', df=None):
-        if df is None:
-            df = self.data
-
-        begin_date = pd.to_datetime(start)
-        end_date = pd.to_datetime(end)
-
-        subset = self.getTransactionsByDateRange(start, end, df)
-
-        expenses = self.getExpenses(subset)
-
-        months = (end_date.year - begin_date.year) * 12 + (end_date.month - begin_date.month) + 1
-
-        return expenses / months if months > 0 else 0
 
     def getAverageMonthlyExpenses(self, start: str = '2000-01-01', end: str = '2100-01-01', df=None):
         if df is None:
@@ -247,6 +236,83 @@ class MoneyChecker:
         average = total_value / months
 
         return average
+    
+
+    def generateOutput(self):
+        
+        runway = self.getCashOnHand() / self.getAverageMonthlyExpenses()
+        days_of_cash_on_hand = runway * 31
+
+        returned_dict = [
+            {
+                "id": 0,
+                "title": "Hey, [Naam],",
+                "subtitle": "Het is weer zo ver!",
+                "isWelcome": True,
+            },
+            {
+                "id": 1,
+                "title": "Jouw netto winst",
+                "subtitle": "Dit is jouw nette winst deze maand.",
+                "graph": "circle",
+                "value": self.getProfits(),
+            },
+            {
+                "id": 2,
+                "title": "Jouw totale kosten",
+                "subtitle": "",
+                "graph": "line",
+                "dataKey": "kosten",
+                "data": [
+                    {"name": "September", "kosten": self.getExpenses(df=self.getTransactionsByDateRange('2025-09-01', '2025-10-01'))},
+                    {"name": "Oktober", "kosten": self.getExpenses(df=self.getTransactionsByDateRange('2025-10-01', '2025-11-01'))},
+                ],
+                "invertPerformanceColors": True,
+            },
+            {
+                "id": 3,
+                "title": "Jouw omzet toppers",
+                "subtitle": "Dit zijn jouw drie grootste partners deze maand",
+                "graph": "bar",
+                "data": self.topCustomersByMoneyFlow(df=self.getTransactionsByDateRange('2025-10-01', '2025-11-01')),
+            },
+            {
+                "id": 4,
+                "title": "Jouw grootste partnerkosten",
+                "subtitle": "Dit is een overzicht van jouw drie duurste partners deze maand.",
+                "graph": "horizontal-bar",
+                "data": self.topCustomersByMoneyFlow(dir='out', df=self.getTransactionsByDateRange('2025-10-01', '2025-11-01')),
+            },
+            {
+                "id": 5,
+                "title": "Jouw cashbuffer deze maand",
+                "subtitle": "",
+                "graph": "double-line",
+                "data": [
+                    {"name": "September", "runway": int(runway), "days": int(days_of_cash_on_hand)},
+                    {"name": "Oktober", "runway": int(runway), "days": int(days_of_cash_on_hand)},
+                ],
+                "dataKey": "runway",
+                "dataKey2": "days",
+            },
+            {
+                "id": 6,
+                "title": "Jouw belasting deze maand",
+                "subtitle": "Zoveel belasting krijg jij/ moet je betalen",
+                "graph": "circle",
+                "value": self.getRevenue(df=self.getTransactionsByDateRange('2025-10-01', '2025-11-01')) * 0.21,
+                "icon": "money-bag",
+                "prefix": "+€",
+            },
+            {
+                "id": 7,
+                "title": "Wat nu?",
+                "subtitle": "Volgende stappen en aanbevelingen.",
+                "screenType": "nextSteps",
+            },
+        ]
+
+        return returned_dict
 
 
 
@@ -277,4 +343,12 @@ Account = MoneyChecker(df)
 
 #print(Account.getExpenses(Account.getTransactionsByDescription('Drankenspeciali')))
 
-print(Account.getAverageMonthlyExpenses())
+#print(Account.getAverageMonthlyExpenses())
+
+runway = Account.getCashOnHand() / Account.getAverageMonthlyExpenses()
+print(runway)
+
+#print(Account.getAverageDailyExpenses())
+
+days_of_cash_on_hand = runway * 31
+print(days_of_cash_on_hand)
