@@ -1,0 +1,258 @@
+\doxysection{test.\+Money\+Checker Class Reference}
+\hypertarget{classtest_1_1_money_checker}{}\label{classtest_1_1_money_checker}\index{test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtest_1_1_money_checker_abee42916357a1f1b9629f6f5bd48bb0e}\label{classtest_1_1_money_checker_abee42916357a1f1b9629f6f5bd48bb0e} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, pd.\+Data\+Frame data)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_aec203435f35ad52ec93fe70f23274760}{check\+Bank}} (self, str string)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a778a6eaf5bab1ab33090483ca4b18cfe}{check\+Exemptions}} (self, str string)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a166d333377880ed260134c260e0b926d}{get\+Profits}} (self, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a985882f2dd124dafaaeede2015bedf32}{get\+Cash\+On\+Hand}} (self, str date=\textquotesingle{}2100-\/01-\/01\textquotesingle{}, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a3ce5a9f7dfe720b3b21d8b59b0877e95}{get\+Net\+Bank}} (self, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a92e0ed065d112cd94820098872b55c67}{get\+Transactions\+By\+Description}} (self, str description, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a405cce72c8c7b8f099002f38df65205f}{check\+Column\+By\+String}} (self, str category, str string, bool strict=False, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a1b7edcf4dc01acf9611f9c3fba597f62}{get\+Transactions\+By\+Date\+Range}} (self, str start, str end, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a1791205bc69b74a51c68a2a7ee61d374}{get\+Transactions\+By\+Bank\+Account}} (self, str relation\+\_\+iban, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a0352cd2851bf11cdac56432440747007}{get\+Revenue}} (self, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a1f98506e2f4d3a0acfd164665ceef051}{get\+Expenses}} (self, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a1750b4c367197009fa2237deaf43e7b2}{top\+Customers\+By\+Money\+Flow}} (self, pd.\+Data\+Frame df=None, int num=3, str dir=\textquotesingle{}in\textquotesingle{})
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a4a050f049c0aade3ee06b8448ba69ce2}{get\+Transactions\+By\+Category}} (self, str category, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a37180c88e889472716cbcd9f3bfb04c2}{get\+Expenses\+By\+Category}} (self, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_a2074e9c7852a720c8a1d78f48e590f9c}{get\+Average\+Monthly\+Expenses}} (self, str start=\textquotesingle{}2000-\/01-\/01\textquotesingle{}, str end=\textquotesingle{}2100-\/01-\/01\textquotesingle{}, pd.\+Data\+Frame df=None)
+\item 
+\mbox{\hyperlink{classtest_1_1_money_checker_abad7cf363005789f66335acd31865411}{generate\+Output}} (self, str month)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtest_1_1_money_checker_aa00cbc8fe4e9124e2f7b20a8189bcd7e}\label{classtest_1_1_money_checker_aa00cbc8fe4e9124e2f7b20a8189bcd7e} 
+{\bfseries data}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtest_1_1_money_checker_aeab2e0526ade6d9db563d6775a932c01}\label{classtest_1_1_money_checker_aeab2e0526ade6d9db563d6775a932c01} 
+list {\bfseries exemptionslist} = \mbox{[}\textquotesingle{}spaarrekening\textquotesingle{}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Wrapper class for calculations
+
+data argument accepts pandas dataframe
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classtest_1_1_money_checker_aec203435f35ad52ec93fe70f23274760}\index{test.MoneyChecker@{test.MoneyChecker}!checkBank@{checkBank}}
+\index{checkBank@{checkBank}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{checkBank()}{checkBank()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_aec203435f35ad52ec93fe70f23274760} 
+test.\+Money\+Checker.\+check\+Bank (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{string}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a boolean based on whether the transaction in question relates to a savings account.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a405cce72c8c7b8f099002f38df65205f}\index{test.MoneyChecker@{test.MoneyChecker}!checkColumnByString@{checkColumnByString}}
+\index{checkColumnByString@{checkColumnByString}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{checkColumnByString()}{checkColumnByString()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a405cce72c8c7b8f099002f38df65205f} 
+test.\+Money\+Checker.\+check\+Column\+By\+String (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{category}{, }\item[{str}]{string}{, }\item[{bool }]{strict}{ = {\ttfamily False}, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a boolean based on whether a given string appears in a given category
+
+Arguments:
+df : DataFrame of transactions.
+category : string of category name. Must be exact.
+string : string of checked string
+strict : boolean determining whether we check for the presence of the string in the column, or whether the column IS the string.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a778a6eaf5bab1ab33090483ca4b18cfe}\index{test.MoneyChecker@{test.MoneyChecker}!checkExemptions@{checkExemptions}}
+\index{checkExemptions@{checkExemptions}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{checkExemptions()}{checkExemptions()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a778a6eaf5bab1ab33090483ca4b18cfe} 
+test.\+Money\+Checker.\+check\+Exemptions (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{string}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Checks if the transaction description should exempt the transaction from net income and expenses.
+
+Returns TRUE if the transaction is valid, FALSE if it is exempt
+
+Arguments:
+string : string to be checked.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_abad7cf363005789f66335acd31865411}\index{test.MoneyChecker@{test.MoneyChecker}!generateOutput@{generateOutput}}
+\index{generateOutput@{generateOutput}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{generateOutput()}{generateOutput()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_abad7cf363005789f66335acd31865411} 
+test.\+Money\+Checker.\+generate\+Output (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{month}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a formatted list of dictionary objects for generating the output to the front-end.
+
+Arguments:
+month : string in format "YYYY-MM" (e.g. "2025-10")
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a2074e9c7852a720c8a1d78f48e590f9c}\index{test.MoneyChecker@{test.MoneyChecker}!getAverageMonthlyExpenses@{getAverageMonthlyExpenses}}
+\index{getAverageMonthlyExpenses@{getAverageMonthlyExpenses}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getAverageMonthlyExpenses()}{getAverageMonthlyExpenses()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a2074e9c7852a720c8a1d78f48e590f9c} 
+test.\+Money\+Checker.\+get\+Average\+Monthly\+Expenses (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str }]{start}{ = {\ttfamily \textquotesingle{}2000-\/01-\/01\textquotesingle{}}, }\item[{str }]{end}{ = {\ttfamily \textquotesingle{}2100-\/01-\/01\textquotesingle{}}, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a float of average monthly expenses within a given timeframe. 
+
+Arguments:
+df : DataFrame of transactions.
+start : string of start date. Format as YYYY-MM-DD.
+end : string of end date. Format as YYYY-MM-DD
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a985882f2dd124dafaaeede2015bedf32}\index{test.MoneyChecker@{test.MoneyChecker}!getCashOnHand@{getCashOnHand}}
+\index{getCashOnHand@{getCashOnHand}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getCashOnHand()}{getCashOnHand()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a985882f2dd124dafaaeede2015bedf32} 
+test.\+Money\+Checker.\+get\+Cash\+On\+Hand (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str }]{date}{ = {\ttfamily \textquotesingle{}2100-\/01-\/01\textquotesingle{}}, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the cash on hand at a specified date.
+
+Arguments:
+date: Date where the cash on hand is requested. Defaults to 2100-01-01 (all transactions on record)
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a1f98506e2f4d3a0acfd164665ceef051}\index{test.MoneyChecker@{test.MoneyChecker}!getExpenses@{getExpenses}}
+\index{getExpenses@{getExpenses}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getExpenses()}{getExpenses()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a1f98506e2f4d3a0acfd164665ceef051} 
+test.\+Money\+Checker.\+get\+Expenses (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the sum of all outflow transactions, excepting those that should be exempt.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a37180c88e889472716cbcd9f3bfb04c2}\index{test.MoneyChecker@{test.MoneyChecker}!getExpensesByCategory@{getExpensesByCategory}}
+\index{getExpensesByCategory@{getExpensesByCategory}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getExpensesByCategory()}{getExpensesByCategory()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a37180c88e889472716cbcd9f3bfb04c2} 
+test.\+Money\+Checker.\+get\+Expenses\+By\+Category (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the sum of expenses made by each category, wrapped in a filtered dictionary.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a3ce5a9f7dfe720b3b21d8b59b0877e95}\index{test.MoneyChecker@{test.MoneyChecker}!getNetBank@{getNetBank}}
+\index{getNetBank@{getNetBank}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getNetBank()}{getNetBank()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a3ce5a9f7dfe720b3b21d8b59b0877e95} 
+test.\+Money\+Checker.\+get\+Net\+Bank (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a float based on the net amount in the savings account, based on the amount deposited and withdrawn.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a166d333377880ed260134c260e0b926d}\index{test.MoneyChecker@{test.MoneyChecker}!getProfits@{getProfits}}
+\index{getProfits@{getProfits}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getProfits()}{getProfits()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a166d333377880ed260134c260e0b926d} 
+test.\+Money\+Checker.\+get\+Profits (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the net profit (revenue minus expenses) in a given dataframe of transactions.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a0352cd2851bf11cdac56432440747007}\index{test.MoneyChecker@{test.MoneyChecker}!getRevenue@{getRevenue}}
+\index{getRevenue@{getRevenue}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getRevenue()}{getRevenue()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a0352cd2851bf11cdac56432440747007} 
+test.\+Money\+Checker.\+get\+Revenue (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the sum of all inflow payments within the given transactions, excepting those that are specified as exempt.
+
+Arguments:
+df : DataFrame of transactions.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a1791205bc69b74a51c68a2a7ee61d374}\index{test.MoneyChecker@{test.MoneyChecker}!getTransactionsByBankAccount@{getTransactionsByBankAccount}}
+\index{getTransactionsByBankAccount@{getTransactionsByBankAccount}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getTransactionsByBankAccount()}{getTransactionsByBankAccount()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a1791205bc69b74a51c68a2a7ee61d374} 
+test.\+Money\+Checker.\+get\+Transactions\+By\+Bank\+Account (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{relation\+\_\+iban}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a filtered Dataframe of transactions based on the specified IBAN
+
+Arguments:
+df : DataFrame of transactions.    
+relation_iban : string of iban    
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a4a050f049c0aade3ee06b8448ba69ce2}\index{test.MoneyChecker@{test.MoneyChecker}!getTransactionsByCategory@{getTransactionsByCategory}}
+\index{getTransactionsByCategory@{getTransactionsByCategory}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getTransactionsByCategory()}{getTransactionsByCategory()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a4a050f049c0aade3ee06b8448ba69ce2} 
+test.\+Money\+Checker.\+get\+Transactions\+By\+Category (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{category}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a filtered dataframe of transactions by the specified category.
+
+Arguments:
+df : DataFrame of transactions. Defaults to main class dataframe.
+category : string of category name. Must be exact.
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a1b7edcf4dc01acf9611f9c3fba597f62}\index{test.MoneyChecker@{test.MoneyChecker}!getTransactionsByDateRange@{getTransactionsByDateRange}}
+\index{getTransactionsByDateRange@{getTransactionsByDateRange}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getTransactionsByDateRange()}{getTransactionsByDateRange()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a1b7edcf4dc01acf9611f9c3fba597f62} 
+test.\+Money\+Checker.\+get\+Transactions\+By\+Date\+Range (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{start}{, }\item[{str}]{end}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a dataframe of transactions based on the specified date range
+
+Arguments:
+df : DataFrame of transactions.
+start : string representing the start date
+end : string representing the end date
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a92e0ed065d112cd94820098872b55c67}\index{test.MoneyChecker@{test.MoneyChecker}!getTransactionsByDescription@{getTransactionsByDescription}}
+\index{getTransactionsByDescription@{getTransactionsByDescription}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{getTransactionsByDescription()}{getTransactionsByDescription()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a92e0ed065d112cd94820098872b55c67} 
+test.\+Money\+Checker.\+get\+Transactions\+By\+Description (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{str}]{description}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns a dataframe of transactions filtered by the presence of a string in the description column.
+
+Arguments:
+df : DataFrame of transactions.
+description : desired string
+\end{DoxyVerb}
+ \Hypertarget{classtest_1_1_money_checker_a1750b4c367197009fa2237deaf43e7b2}\index{test.MoneyChecker@{test.MoneyChecker}!topCustomersByMoneyFlow@{topCustomersByMoneyFlow}}
+\index{topCustomersByMoneyFlow@{topCustomersByMoneyFlow}!test.MoneyChecker@{test.MoneyChecker}}
+\doxysubsubsection{\texorpdfstring{topCustomersByMoneyFlow()}{topCustomersByMoneyFlow()}}
+{\footnotesize\ttfamily \label{classtest_1_1_money_checker_a1750b4c367197009fa2237deaf43e7b2} 
+test.\+Money\+Checker.\+top\+Customers\+By\+Money\+Flow (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{pd.\+Data\+Frame }]{df}{ = {\ttfamily None}, }\item[{int }]{num}{ = {\ttfamily 3}, }\item[{str }]{dir}{ = {\ttfamily \textquotesingle{}in\textquotesingle{}}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Function for getting the total amount of money going in or out. 
+
+Arguments:
+df: Dataframe of relevant transactions. Defaults to all.
+num: Number of customers to return. Defaults to 3.
+dir: Direction of money flow. Accepts 'in' or 'out'. Defaults to 'in'
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+test.\+py\end{DoxyCompactItemize}
