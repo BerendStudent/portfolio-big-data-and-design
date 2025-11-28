@@ -11,14 +11,22 @@ class MoneyChecker:
     data argument accepts pandas dataframe
     '''
 
-    exemptionslist = ['spaarrekening']
+    exemptionslist = ['spaarrekening'] # for internal transactions
 
     def __init__(self, data):
         self.data = data
+
+        # fills blank cells in the description column
         data['description'] = data['description'].replace('', pd.NA).fillna('')
 
     
     def checkBank(self, string : str):
+        '''
+        Returns a boolean based on whether the transaction in question relates to a savings account.
+
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         string = string.lower()
         wordlist = string.split()
         for word in wordlist:
@@ -31,6 +39,9 @@ class MoneyChecker:
         Checks if the transaction description should exempt the transaction from net income and expenses.
 
         Returns TRUE if the transaction is valid, FALSE if it is exempt
+
+        Arguments:
+        string : string to be checked.
         '''
 
         string = string.lower()
@@ -41,6 +52,12 @@ class MoneyChecker:
         return True
     
     def getProfits(self, df=None):
+        '''
+        Returns the net profit (revenue minus expenses) in a given dataframe of transactions.
+
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         if df is None:
             df = self.data
         
@@ -49,14 +66,17 @@ class MoneyChecker:
 
         return total_in - total_out
     
-    def getCashOnHand(self, date='2100-01-01'):
+    def getCashOnHand(self, date='2100-01-01', df=None):
         '''
-        Returns the cash on hand at a specified date. No date specified returns at present moment.
+        Returns the cash on hand at a specified date.
 
         Arguments:
         date: Date where the cash on hand is requested. Defaults to 2100-01-01 (all transactions on record)
+        df : DataFrame of transactions.
         '''
-        df = self.getTransactionsByDateRange('2000-01-01', date)
+        if df is None:
+            df = self.data
+        df = self.getTransactionsByDateRange('2000-01-01', date, df)
         total_in = df.loc[df['flow'] == 'inflow','amount'].sum()
 
         total_out = df.loc[df['flow'] == 'outflow','amount'].sum()
@@ -64,7 +84,13 @@ class MoneyChecker:
         cash_on_hand = (total_in - total_out) + self.getNetBank()
         return cash_on_hand
     
-    def getNetBank(self, accountID=None, df=None):
+    def getNetBank(self, df=None):
+        '''
+        Returns a float based on the net amount in the savings account, based on the amount deposited and withdrawn.
+
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         if df is None:
             df = self.data
         total_bank_out = df.loc[
@@ -79,6 +105,13 @@ class MoneyChecker:
         return total_bank_in - total_bank_out
 
     def getTransactionsByDescription(self, description: str, df=None):
+        '''
+        Returns a dataframe of transactions filtered by the presence of a string in the description column.
+
+        Arguments:
+        df : DataFrame of transactions.
+        description : desired string
+        '''
         if df is None:
             df = self.data
         description = description.lower()
@@ -91,6 +124,15 @@ class MoneyChecker:
         return df[mask]
 
     def checkColumnByString(self, category: str, string: str, strict=False, df=None):
+        '''
+        Returns a boolean based on whether a given string appears in a given category
+        
+        Arguments:
+        df : DataFrame of transactions.
+        category : string of category name. Must be exact.
+        string : string of checked string
+        strict : boolean determining whether we check for the presence of the string in the column, or whether the column IS the string.
+        '''
         if df is None:
             df = self.data
         string = string.lower()
@@ -103,6 +145,14 @@ class MoneyChecker:
                     for _, row in df.iterrows())
 
     def getTransactionsByDateRange(self, start: str, end: str, df=None):
+        '''
+        Returns a dataframe of transactions based on the specified date range
+
+        Arguments:
+        df : DataFrame of transactions.
+        start : string representing the start date
+        end : string representing the end date
+        '''
         if df is None:
             df = self.data
         df['booking_date'] = pd.to_datetime(df['booking_date'])
@@ -115,17 +165,30 @@ class MoneyChecker:
         return df[(df['booking_date'] >= start) & (df['booking_date'] <= end)]
 
     def getTransactionsByBankAccount(self, relation_iban : str, df=None):
+        '''
+        Returns a filtered Dataframe of transactions based on the specified IBAN
+
+        Arguments:
+        df : DataFrame of transactions.    
+        relation_iban : string of iban    
+        '''
         if df is None:
             df=self.data
         return df[df["relation_iban"] == relation_iban]
     
     def getRevenue(self, df=None):
+        '''
+        Returns the sum of all inflow payments within the given transactions, excepting those that are specified as exempt.
+
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         revenue = 0
 
         if df is None:
             df = self.data
 
-        revenue = df.loc[
+        revenue = df.loc[ # flow must be inflow, checks exemptions, and checks if this is an internal transfer
             (df['flow'] == 'inflow') & (df['description'].apply(self.checkExemptions) & (df['category'] != 'Internal transfers')),
             'amount'
         ].sum()
@@ -133,20 +196,22 @@ class MoneyChecker:
         return revenue
     
     def getExpenses(self, df=None):
+        '''
+        Returns the sum of all outflow transactions, excepting those that should be exempt.
+        
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         expenses = 0
         if df is None:
             df = self.data
         
-        expenses = df.loc[
+        expenses = df.loc[ # flow must be outflow, checks exemptions, and checks if this is an internal transfer
             (df['flow'] == 'outflow') & (df['description'].apply(self.checkExemptions) & (df['category'] != 'Internal transfers')),
             'amount'
         ].sum()
 
         return expenses
-
-    def getRevenueChange(self):
-
-        return
     
     def topCustomersByMoneyFlow(self, df=None, num = 3, dir = 'in'):
         '''
@@ -183,6 +248,13 @@ class MoneyChecker:
     
 
     def getTransactionsByCategory(self, category : str, df=None):
+        '''
+        Returns a filtered dataframe of transactions by the specified category.
+        
+        Arguments:
+        df : DataFrame of transactions. Defaults to main class dataframe.
+        category : string of category name. Must be exact.
+        '''
         if df is None:
             df = self.data
 
@@ -191,6 +263,12 @@ class MoneyChecker:
         return df
     
     def getExpensesByCategory(self, df=None):
+        '''
+        Returns the sum of expenses made by each category, wrapped in a filtered dictionary.
+        
+        Arguments:
+        df : DataFrame of transactions.
+        '''
         if df is None:
             df = self.data
 
@@ -211,6 +289,14 @@ class MoneyChecker:
 
 
     def getAverageMonthlyExpenses(self, start: str = '2000-01-01', end: str = '2100-01-01', df=None):
+        '''
+        Returns a float of average monthly expenses within a given timeframe. 
+        
+        Arguments:
+        df : DataFrame of transactions.
+        start : string of start date. Format as YYYY-MM-DD.
+        end : string of end date. Format as YYYY-MM-DD
+        '''
         if df is None:
             df = self.data
 
@@ -242,7 +328,10 @@ class MoneyChecker:
 
     def generateOutput(self, month: str):
         """
-        month: string in format "YYYY-MM" (e.g. "2025-10")
+        Returns a formatted list of dictionary objects for generating the output to the front-end.
+
+        Arguments:
+        month : string in format "YYYY-MM" (e.g. "2025-10")
         """
 
         current_month_dt = datetime.strptime(month, "%Y-%m")
@@ -384,4 +473,4 @@ Account = MoneyChecker(df)
 #days_of_cash_on_hand = runway * 31
 #print(days_of_cash_on_hand)
 
-print(Account.generateOutput('2025-10'))
+#print(Account.generateOutput('2025-10'))
