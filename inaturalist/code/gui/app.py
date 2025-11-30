@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify, render_template, session
 import random
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = "afd5bb7659c5d0f2da6077c944b548bea8eea6c9d724a845923b5449b86d919e"
 
-WORDS = ['gudrun', 'redmountain', 'alko', 'gufi', 'vulpera', 'arone', 'bison']
+file = 'inaturalist/code/EUPVP_Official_List.xlsx'
+df = pd.read_excel(file)
+
+df = df[df['Country / Org.'] == 'NL']
+
+WORDS = df['variety denomination'].dropna().unique().tolist()
 
 
 def evaluate_guess(guess, target):

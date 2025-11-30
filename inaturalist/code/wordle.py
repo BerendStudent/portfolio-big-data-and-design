@@ -1,11 +1,13 @@
 import pandas as pd
 import random
 
-#file = 'inaturalist/code/EUPVP_Official_List.xlsx'
-#df = pd.read_excel(file)
+file = 'inaturalist/code/EUPVP_Official_List.xlsx'
+df = pd.read_excel(file)
 
+df = df[df['Country / Org.'] == 'NL']
 
-words = ['gudrun', 'red mountain', 'alko', 'gufi', 'vulpera', 'arone', 'bison']
+words = df['variety denomination'].dropna().unique().tolist()
+
 
 print('Guess the word!')
 random_word = words[random.randint(0, len(words))]
