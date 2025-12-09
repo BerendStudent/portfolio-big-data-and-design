@@ -97,3 +97,34 @@ Hele nette uitwerking van alle deelopdrachten! Leuk om nog een klein staartje an
 # Feedback Wireframe
 * Ik heb van Duncan als feedback ontvangen dat mijn wireframes op een onjuiste manier gemaakt zijn
 * Ik moet ook denken aan hoe haalbaar een demo van mijn idee voor een plantenboek is
+
+
+# Feedback Levien op Crime Locator
+* Uitdagend
+* Interviews ECHT belangrijk
+* interessante etische kwesties
+
+# Feedback Levien Phising
+* Leuk
+* Super interessant
+* Vertrouw je de AI?
+* Wie is de afzender?
+* Wel tricky om een AI systeem te trainen op phishing emails
+* Uitspraken doen waar je niet 100% zeker over bent?
+* Waar ga je zitten? Preventief of retroactief?
+* Beter gevalideerde data advies uitbrengen
+* NIET gewoon in LLM gooien, want dat is niet betrouwbaar
+* Wisdom of the crowd
+* Samen sterker staan, zoals vakbond
+* Onderwerp is relevant, doelgroep is te doen, super actueel
+* Goede research nodig, niet op aannames bouwen
+* Onderwerp is ook goedgekeurd
+
+# Feedback Levien essay-onderwerp
+* Gaat over data-kwaliteit
+* Wanneer is surge pricing justified?
+* Belangen van alle partijen
+* Gaat over rechtvaardigheid
+* Goed onderwerp
+* Kijk naar interface. Waarom black box?
+* Privacy by design
