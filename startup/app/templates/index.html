@@ -2,55 +2,39 @@
 <html lang="en">
 <head>
     <title>Main Page</title>
-    <style>
-        iframe {
-            width: 100%;
-            height: 500px;
-            border: 1px solid #ccc;
-        }
-
-        dialog {
-            padding: 1rem;
-        }
-
-        dialog input {
-            display: block;
-            margin-bottom: 0.5rem;
-            width: 100%;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
 
-    <h1>Main Page</h1>
-
     <iframe id="mapFrame" src="/static/berlin_map.html"></iframe>
 
-    <button id="report" type="button">Report incident</button>
+    <button id="report" class="fab" type="button">➕ Report incident</button>
+    <button id="resetMapButton" class="fab" type="button">🔄 Reset map</button>
 
     <dialog id="myDialog">
         <form method="POST" action="/add_point">
-        <label>
-            Latitude
-            <input name="lat" required>
-        </label>
+            <label>
+                Latitude
+                <input name="lat" required>
+            </label>
 
-        <label>
-            Longitude
-            <input name="lon" required>
-        </label>
+            <label>
+                Longitude
+                <input name="lon" required>
+            </label>
 
-        <label>
-            Description
-            <input name="description" required>
-        </label>
+            <label>
+                Description
+                <input name="description" required>
+            </label>
 
-        <button type="submit">Submit</button>
-        <button type="button" id="closeDialogBtn">Cancel</button>
+            <div class="dialog-actions">
+                <button type="submit" class="submit">Submit</button>
+                <button type="button" id="closeDialogBtn" class="cancel">Cancel</button>
+            </div>
         </form>
     </dialog>
-
-    <button id="resetMapButton" type="button">Reset map</button>
 
     <script>
         const reportButton = document.getElementById('report');
@@ -72,7 +56,7 @@
 
         document.getElementById("resetMapButton").addEventListener("click", () => {
             fetch("/reset_map", { method: "POST" })
-            .then(() => reloadMap());
+                .then(() => reloadMap());
         });
     </script>
 
