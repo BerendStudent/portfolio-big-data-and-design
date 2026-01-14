@@ -1,17 +1,20 @@
-from flask import Flask, request, render_template, redirect, url_for, make_response
+from flask import Flask, request, render_template, redirect
 import pandas as pd
-from markupsafe import escape
 import folium
 import osmnx as ox
 import networkx as nx
 import geopandas as gpd
 from shapely.geometry import Point
-import json
 from pathlib import Path
+import uuid
+import threading
 
 app = Flask(__name__)
 
 CSV_PATH = "startup/app/points.csv"
+STATIC_MAP_PATH = "startup/app/static/berlin_map.html"
+STATIC_ROUTE_PATH = "startup/app/static/route.html"
+route_jobs = {}
 
 
 def getPoints():
@@ -28,6 +31,7 @@ def placePoint(lat, lon, description):
 def index():
     return render_template("index.html")
 
+
 @app.route("/add_point", methods=["POST"])
 def add_point():
     lat = request.form.get("lat")
@@ -38,8 +42,8 @@ def add_point():
         return "Missing data", 400
 
     placePoint(lat, lon, description)
-
     return redirect("/")
+
 
 @app.route("/reset_map", methods=["POST"])
 def reset_map():
@@ -51,159 +55,142 @@ def reset_map():
     points = getPoints()
 
     for point in points.itertuples(index=False):
-        markerObj = folium.Marker(
+        folium.Marker(
             location=[point.lat, point.lon],
             popup=f"<b>{point.description}</b>"
-        )
-        markerObj.add_to(mapObj)
-    
-    mapObj.save("startup/app/static/berlin_map.html")
+        ).add_to(mapObj)
 
+    mapObj.save(STATIC_MAP_PATH)
     return ("", 204)
 
-# Code van Gerjan
-def create_safe_route_map(
-    city_query: str,
-    travel_mode: str,
-    start_latlon: tuple[float, float],
-    end_latlon: tuple[float, float],
-    avoid_radius_m: float,
-    penalty_multiplier: float,
-    output_html: str = "startup/app/static/berlin_map.html",
-    ):
-    """
-    city_query: bijv. "Utrecht, Netherlands"
-    travel_mode: "walk", "bike", of "drive"
-    start_latlon / end_latlon: (lat, lon)
-    avoid_latlon_list: lijst van punten die je wilt vermijden
-    avoid_radius_m: binnen deze afstand -> penalty
-    penalty_multiplier: hoe "onaantrekkelijk" (hoger = meer vermijden)
-    """
 
-    # OSMnx instellingen (cache is fijn voor herhaald testen)
+def create_safe_route_map(
+    city_query,
+    travel_mode,
+    start_latlon,
+    end_latlon,
+    avoid_radius_m,
+    penalty_multiplier,
+    output_html,
+):
     ox.settings.use_cache = True
     ox.settings.log_console = False
 
-    # import points csv
-    df = pd.read_csv("startup/app/points.csv")
-
+    df = pd.read_csv(CSV_PATH)
     avoid_latlon_list = list(zip(df["lat"], df["lon"]))
 
-
-    
-    # 1) Wegennet downloaden
-    # We gebruiken 2 grafen:
-    # - projected_graph (meters) om afstanden/penalty's te berekenen
-    # - wgs_graph (lat/lon) om coördinaten te exporteren naar JSON en voor folium
     projected_graph = ox.graph_from_place(city_query, network_type=travel_mode)
     projected_graph = ox.project_graph(projected_graph)
 
     wgs_graph = ox.graph_from_place(city_query, network_type=travel_mode)
 
-    
-    # 2) Start/eind omzetten naar dichtstbijzijnde nodes in de graaf
     start_node_id = ox.distance.nearest_nodes(
-        wgs_graph,
-        X=start_latlon[1],  # lon
-        Y=start_latlon[0],  # lat
+        wgs_graph, X=start_latlon[1], Y=start_latlon[0]
     )
     end_node_id = ox.distance.nearest_nodes(
-        wgs_graph,
-        X=end_latlon[1],
-        Y=end_latlon[0],
+        wgs_graph, X=end_latlon[1], Y=end_latlon[0]
     )
 
-    # 3) Avoid-punten projecteren (zodat we in meters kunnen meten)
     nodes_gdf = ox.graph_to_gdfs(projected_graph, nodes=True, edges=False)
 
     avoid_points_gdf = gpd.GeoDataFrame(
-    df[["lat", "lon"]].assign(id=range(len(df))),
-    geometry=gpd.points_from_xy(df["lon"], df["lat"]),
-    crs="EPSG:4326",
+        df.assign(id=range(len(df))),
+        geometry=gpd.points_from_xy(df["lon"], df["lat"]),
+        crs="EPSG:4326",
     ).to_crs(nodes_gdf.crs)
 
-    
-    # 4) Voor elke weg (edge) bepalen hoe dicht hij bij avoid-punten ligt
     edges_gdf = ox.graph_to_gdfs(projected_graph, nodes=False, edges=True).copy()
 
-    # min afstand (in meters) van edge naar dichtstbijzijnde avoid-punt
-    min_distance_to_avoid = []
     if len(avoid_points_gdf) == 0:
-        min_distance_to_avoid = [1e9] * len(edges_gdf)
+        edges_gdf["min_dist"] = 1e9
     else:
-        for edge_geometry in edges_gdf.geometry:
-            min_distance_to_avoid.append(float(avoid_points_gdf.distance(edge_geometry).min()))
+        edges_gdf["min_dist"] = [
+            float(avoid_points_gdf.distance(geom).min())
+            for geom in edges_gdf.geometry
+        ]
 
-    edges_gdf["min_dist"] = min_distance_to_avoid
-
-    # basis "kosten" = lengte van de weg (meters)
     edges_gdf["weight"] = edges_gdf["length"].astype(float)
+    within = edges_gdf["min_dist"] <= float(avoid_radius_m)
+    edges_gdf.loc[within, "weight"] *= float(penalty_multiplier)
 
-    # als edge binnen radius valt, maak hem duurder
-    within_avoid_zone = edges_gdf["min_dist"] <= float(avoid_radius_m)
-    edges_gdf.loc[within_avoid_zone, "weight"] = (
-        edges_gdf.loc[within_avoid_zone, "length"].astype(float) * float(penalty_multiplier)
+    weighted_graph = projected_graph.copy()
+    for (u, v, k), row in edges_gdf.iterrows():
+        weighted_graph[u][v][k]["weight"] = float(row["weight"])
+
+    route_node_ids = nx.shortest_path(
+        weighted_graph,
+        start_node_id,
+        end_node_id,
+        weight="weight",
     )
 
-    # 5) Weight terug in de graaf zetten
-    weighted_graph = projected_graph.copy()
+    route_latlon = [
+        (wgs_graph.nodes[n]["y"], wgs_graph.nodes[n]["x"])
+        for n in route_node_ids
+        if n in wgs_graph.nodes
+    ]
 
-    for (u, v, k), row in edges_gdf.iterrows():
-        if weighted_graph.has_edge(u, v, k):
-            weighted_graph[u][v][k]["weight"] = float(row["weight"])
-            weighted_graph[u][v][k]["min_dist"] = float(row["min_dist"])
-
-    # 6) Route berekenen (kortste pad op basis van weight)
-    try:
-        route_node_ids = nx.shortest_path(
-            weighted_graph,
-            start_node_id,
-            end_node_id,
-            weight="weight",
-        )
-    except nx.NetworkXNoPath:
-        raise RuntimeError(
-            "Geen route gevonden. Probeer avoid_radius_m kleiner of penalty_multiplier lager."
-        )
-
-    # 7) Route omzetten naar lat/lon lijst (voor kaart & export)
-    route_latlon = []
-    for node_id in route_node_ids:
-        if node_id in wgs_graph.nodes:
-            lat = wgs_graph.nodes[node_id]["y"]
-            lon = wgs_graph.nodes[node_id]["x"]
-            route_latlon.append((float(lat), float(lon)))
-
-    # 8) Folium kaart maken en tekenen
     folium_map = folium.Map(location=start_latlon, zoom_start=14)
 
-    # route lijn
-    folium.PolyLine(
-        route_latlon,
-        weight=6,
-        opacity=0.85,
-        tooltip="Route (vermijdt avoid-zones)"
-    ).add_to(folium_map)
-
-    # start/eind markers
+    folium.PolyLine(route_latlon, weight=6, opacity=0.85).add_to(folium_map)
     folium.Marker(start_latlon, tooltip="Start").add_to(folium_map)
-    folium.Marker(end_latlon, tooltip="Eind").add_to(folium_map)
+    folium.Marker(end_latlon, tooltip="End").add_to(folium_map)
 
-    # avoid punten + cirkels
-    for (lat, lon) in avoid_latlon_list:
+    for lat, lon in avoid_latlon_list:
         folium.Circle(
             location=(lat, lon),
             radius=float(avoid_radius_m),
             fill=True,
             fill_opacity=0.15,
-            tooltip=f"Avoid-zone ({avoid_radius_m:.0f} m)"
         ).add_to(folium_map)
 
-        folium.Marker((lat, lon), tooltip="Avoid punt").add_to(folium_map)
+    folium_map.save(output_html)
 
-    # 9) Opslaan (HTML)
-    html_path = Path(output_html).resolve()
-    folium_map.save(str(html_path))
+def route_worker(job_id, params):
+    try:
+        route_jobs[job_id]["status"] = "running"
+
+        create_safe_route_map(**params)
+
+        route_jobs[job_id]["status"] = "done"
+    except Exception as e:
+        route_jobs[job_id]["status"] = "error"
+        route_jobs[job_id]["error"] = str(e)
+
+
+@app.route("/start_route", methods=["POST"])
+def start_route():
+    data = request.json
+
+    job_id = str(uuid.uuid4())
+    route_jobs[job_id] = {"status": "queued", "error": None}
+
+    params = {
+        "city_query": data["city_query"],
+        "travel_mode": data["travel_mode"],
+        "start_latlon": tuple(data["start_latlon"]),
+        "end_latlon": tuple(data["end_latlon"]),
+        "avoid_radius_m": float(data["avoid_radius_m"]),
+        "penalty_multiplier": float(data["penalty_multiplier"]),
+        "output_html": STATIC_ROUTE_PATH,
+    }
+
+    threading.Thread(
+        target=route_worker,
+        args=(job_id, params),
+        daemon=True,
+    ).start()
+
+    return {"job_id": job_id}, 202
+
+
+@app.route("/route_status/<job_id>")
+def route_status(job_id):
+    job = route_jobs.get(job_id)
+    if not job:
+        return {"error": "Unknown job"}, 404
+    return job
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
