@@ -1,20 +1,21 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, jsonify
 import pandas as pd
 import folium
 import osmnx as ox
 import networkx as nx
 import geopandas as gpd
 from shapely.geometry import Point
-from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+from functools import lru_cache
 import uuid
-import threading
 
 app = Flask(__name__)
 
 CSV_PATH = "startup/app/points.csv"
-STATIC_MAP_PATH = "startup/app/static/berlin_map.html"
-STATIC_ROUTE_PATH = "startup/app/static/route.html"
-route_jobs = {}
+STATIC_DIR = "startup/app/static"
+
+executor = ThreadPoolExecutor(max_workers=2)
+route_jobs: dict[str, dict] = {}
 
 
 def getPoints():
@@ -25,6 +26,12 @@ def placePoint(lat, lon, description):
     df = pd.read_csv(CSV_PATH)
     df.loc[len(df)] = [lat, lon, description]
     df.to_csv(CSV_PATH, index=False)
+
+
+@lru_cache(maxsize=1000)
+def geocode_address(address: str) -> tuple[float, float]:
+    lat, lon = ox.geocode(address)
+    return float(lat), float(lon)
 
 
 @app.route("/")
@@ -42,25 +49,22 @@ def add_point():
         return "Missing data", 400
 
     placePoint(lat, lon, description)
-    return redirect("/")
+    return ("", 204)
 
 
 @app.route("/reset_map", methods=["POST"])
 def reset_map():
-    mapObj = folium.Map(
-        location=[52.081730, 5.104691],
-        zoom_start=10
-    )
+    fmap = folium.Map(location=[52.081730, 5.104691], zoom_start=10)
 
-    points = getPoints()
-
-    for point in points.itertuples(index=False):
+    for p in getPoints().itertuples(index=False):
         folium.Marker(
-            location=[point.lat, point.lon],
-            popup=f"<b>{point.description}</b>"
-        ).add_to(mapObj)
+            [p.lat, p.lon],
+            popup=f"<b>{p.description}</b>",
+            icon=folium.Icon(color="red", icon="exclamation-sign"),
+            tooltip=p.description
+        ).add_to(fmap)
 
-    mapObj.save(STATIC_MAP_PATH)
+    fmap.save(f"{STATIC_DIR}/berlin_map.html")
     return ("", 204)
 
 
@@ -77,119 +81,126 @@ def create_safe_route_map(
     ox.settings.log_console = False
 
     df = pd.read_csv(CSV_PATH)
-    avoid_latlon_list = list(zip(df["lat"], df["lon"]))
+    avoid_points = list(zip(df["lat"], df["lon"], df["description"]))
 
-    projected_graph = ox.graph_from_place(city_query, network_type=travel_mode)
-    projected_graph = ox.project_graph(projected_graph)
 
-    wgs_graph = ox.graph_from_place(city_query, network_type=travel_mode)
+    G_wgs = ox.graph_from_place(city_query, network_type=travel_mode)
+    G_proj = ox.project_graph(G_wgs)
 
-    start_node_id = ox.distance.nearest_nodes(
-        wgs_graph, X=start_latlon[1], Y=start_latlon[0]
-    )
-    end_node_id = ox.distance.nearest_nodes(
-        wgs_graph, X=end_latlon[1], Y=end_latlon[0]
-    )
 
-    nodes_gdf = ox.graph_to_gdfs(projected_graph, nodes=True, edges=False)
+    start_node = ox.distance.nearest_nodes(G_wgs, start_latlon[1], start_latlon[0])
+    end_node = ox.distance.nearest_nodes(G_wgs, end_latlon[1], end_latlon[0])
 
-    avoid_points_gdf = gpd.GeoDataFrame(
-        df.assign(id=range(len(df))),
+
+    nodes_gdf = ox.graph_to_gdfs(G_proj, nodes=True, edges=False)
+
+    avoid_gdf = gpd.GeoDataFrame(
+        df[["lat", "lon", "description"]],
         geometry=gpd.points_from_xy(df["lon"], df["lat"]),
-        crs="EPSG:4326",
+        crs="EPSG:4326"
     ).to_crs(nodes_gdf.crs)
 
-    edges_gdf = ox.graph_to_gdfs(projected_graph, nodes=False, edges=True).copy()
 
-    if len(avoid_points_gdf) == 0:
-        edges_gdf["min_dist"] = 1e9
+    edges_gdf = ox.graph_to_gdfs(G_proj, nodes=False, edges=True).copy()
+
+    if len(avoid_gdf) > 0:
+        edges_gdf["min_dist"] = edges_gdf.geometry.apply(
+            lambda g: avoid_gdf.distance(g).min()
+        )
     else:
-        edges_gdf["min_dist"] = [
-            float(avoid_points_gdf.distance(geom).min())
-            for geom in edges_gdf.geometry
-        ]
+        edges_gdf["min_dist"] = 1e9
 
-    edges_gdf["weight"] = edges_gdf["length"].astype(float)
-    within = edges_gdf["min_dist"] <= float(avoid_radius_m)
-    edges_gdf.loc[within, "weight"] *= float(penalty_multiplier)
+    edges_gdf["weight"] = edges_gdf["length"]
+    edges_gdf.loc[
+        edges_gdf["min_dist"] <= avoid_radius_m, "weight"
+    ] *= penalty_multiplier
 
-    weighted_graph = projected_graph.copy()
     for (u, v, k), row in edges_gdf.iterrows():
-        weighted_graph[u][v][k]["weight"] = float(row["weight"])
+        G_proj[u][v][k]["weight"] = float(row["weight"])
 
-    route_node_ids = nx.shortest_path(
-        weighted_graph,
-        start_node_id,
-        end_node_id,
-        weight="weight",
-    )
 
-    route_latlon = [
-        (wgs_graph.nodes[n]["y"], wgs_graph.nodes[n]["x"])
-        for n in route_node_ids
-        if n in wgs_graph.nodes
-    ]
+    route = nx.shortest_path(G_proj, start_node, end_node, weight="weight")
+    coords = [(G_wgs.nodes[n]["y"], G_wgs.nodes[n]["x"]) for n in route]
 
-    folium_map = folium.Map(location=start_latlon, zoom_start=14)
+    fmap = folium.Map(location=start_latlon, zoom_start=13)
 
-    folium.PolyLine(route_latlon, weight=6, opacity=0.85).add_to(folium_map)
-    folium.Marker(start_latlon, tooltip="Start").add_to(folium_map)
-    folium.Marker(end_latlon, tooltip="End").add_to(folium_map)
+    folium.PolyLine(
+        coords,
+        weight=6,
+        color="#007bff",
+        opacity=0.9,
+        tooltip="Safe route"
+    ).add_to(fmap)
 
-    for lat, lon in avoid_latlon_list:
+
+    folium.Marker(start_latlon, tooltip="Start").add_to(fmap)
+    folium.Marker(end_latlon, tooltip="End").add_to(fmap)
+
+    for lat, lon, desc in avoid_points:
         folium.Circle(
             location=(lat, lon),
             radius=float(avoid_radius_m),
+            color="red",
             fill=True,
             fill_opacity=0.15,
-        ).add_to(folium_map)
+            weight=2,
+            tooltip="Avoid zone"
+        ).add_to(fmap)
 
-    folium_map.save(output_html)
+        folium.Marker(
+            location=(lat, lon),
+            icon=folium.Icon(color="red", icon="exclamation-sign"),
+            popup=f"<b>{desc}</b>",
+            tooltip=desc
+        ).add_to(fmap)
 
-def route_worker(job_id, params):
-    try:
-        route_jobs[job_id]["status"] = "running"
 
-        create_safe_route_map(**params)
-
-        route_jobs[job_id]["status"] = "done"
-    except Exception as e:
-        route_jobs[job_id]["status"] = "error"
-        route_jobs[job_id]["error"] = str(e)
+    fmap.save(output_html)
 
 
 @app.route("/start_route", methods=["POST"])
 def start_route():
     data = request.json
-
     job_id = str(uuid.uuid4())
-    route_jobs[job_id] = {"status": "queued", "error": None}
+    route_jobs[job_id] = {"status": "running"}
 
-    params = {
-        "city_query": data["city_query"],
-        "travel_mode": data["travel_mode"],
-        "start_latlon": tuple(data["start_latlon"]),
-        "end_latlon": tuple(data["end_latlon"]),
-        "avoid_radius_m": float(data["avoid_radius_m"]),
-        "penalty_multiplier": float(data["penalty_multiplier"]),
-        "output_html": STATIC_ROUTE_PATH,
-    }
+    try:
+        start = (
+            geocode_address(data["start_address"])
+            if "start_address" in data
+            else tuple(data["start_latlon"])
+        )
+        end = (
+            geocode_address(data["end_address"])
+            if "end_address" in data
+            else tuple(data["end_latlon"])
+        )
+    except Exception as e:
+        route_jobs[job_id] = {"status": "error", "error": str(e)}
+        return jsonify(job_id=job_id)
 
-    threading.Thread(
-        target=route_worker,
-        args=(job_id, params),
-        daemon=True,
-    ).start()
+    def task():
+        try:
+            create_safe_route_map(
+                city_query=data["city_query"],
+                travel_mode=data["travel_mode"],
+                start_latlon=start,
+                end_latlon=end,
+                avoid_radius_m=float(data["avoid_radius_m"]),
+                penalty_multiplier=float(data["penalty_multiplier"]),
+                output_html=f"{STATIC_DIR}/route.html",
+            )
+            route_jobs[job_id]["status"] = "done"
+        except Exception as e:
+            route_jobs[job_id] = {"status": "error", "error": str(e)}
 
-    return {"job_id": job_id}, 202
+    executor.submit(task)
+    return jsonify(job_id=job_id)
 
 
 @app.route("/route_status/<job_id>")
 def route_status(job_id):
-    job = route_jobs.get(job_id)
-    if not job:
-        return {"error": "Unknown job"}, 404
-    return job
+    return jsonify(route_jobs.get(job_id, {"status": "unknown"}))
 
 
 if __name__ == "__main__":

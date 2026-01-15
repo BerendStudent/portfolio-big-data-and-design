@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Main Page</title>
+    <title>Safe Routing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
     <iframe id="mapFrame" src="/static/berlin_map.html"></iframe>
 
-    <button id="report" class="fab" type="button"> Report incident</button>
-    <button id="resetMapButton" class="fab" type="button"> Reset map</button>
-    <button id="routeButton" class="fab primary" type="button"> Calculate route</button>
+    <button id="routeButton" class="fab">Route</button>
+    <button id="report" class="fab">Report</button>
+    <button id="resetMapButton" class="fab">Reset map</button>
 
-    <dialog id="myDialog">
+    <dialog id="incidentDialog">
         <form method="POST" action="/add_point">
             <label>
                 Latitude
@@ -31,125 +31,101 @@
             </label>
 
             <div class="dialog-actions">
-                <button type="submit" class="submit">Submit</button>
-                <button type="button" id="closeDialogBtn" class="cancel">Cancel</button>
+                <button type="submit" class="submit" id="submitReport">Submit</button>
+                <button type="button" class="cancel" id="closeIncident">Cancel</button>
             </div>
         </form>
     </dialog>
 
     <dialog id="routeDialog">
-        <h3>Calculate safe route</h3>
+        <form onsubmit="return false;">
+            <label>
+                Start address
+                <input id="startAddress" placeholder="Domplein 1, Utrecht">
+            </label>
 
-        <label>
-            Start (lat, lon)
-            <input id="startLat" placeholder="52.09">
-            <input id="startLon" placeholder="5.12">
-        </label>
+            <label>
+                End address
+                <input id="endAddress" placeholder="Utrecht Centraal">
+            </label>
 
-        <label>
-            End (lat, lon)
-            <input id="endLat" placeholder="52.04">
-            <input id="endLon" placeholder="5.18">
-        </label>
+            <label>
+                Avoid radius (meters)
+                <input id="avoidRadius" value="100">
+            </label>
 
-        <label>
-            Avoid radius (meters)
-            <input id="avoidRadius" value="100">
-        </label>
+            <label>
+                Penalty multiplier
+                <input id="penaltyMultiplier" value="5">
+            </label>
 
-        <label>
-            Penalty multiplier
-            <input id="penaltyMultiplier" value="5">
-        </label>
+            <div class="dialog-actions">
+                <button id="startRoute" class="submit">Start route</button>
+                <button type="button" class="cancel" id="closeRoute">Cancel</button>
+            </div>
 
-        <div class="dialog-actions">
-            <button id="startRouteBtn" class="submit" type="button">Start</button>
-            <button id="closeRouteDialogBtn" class="cancel" type="button">Cancel</button>
-        </div>
-
-        <p id="routeStatus"></p>
+            <p id="routeStatus"></p>
+        </form>
     </dialog>
 
     <script>
         const mapFrame = document.getElementById("mapFrame");
 
-
-        const reportButton = document.getElementById('report');
-        const closeButton = document.getElementById('closeDialogBtn');
-        const dialog = document.getElementById('myDialog');
-
-        reportButton.onclick = () => dialog.showModal();
-        closeButton.onclick = () => dialog.close();
-
-
-        function reloadMap(src) {
-            mapFrame.src = src + "?t=" + Date.now();
-        }
+        const incidentDialog = document.getElementById("incidentDialog");
+        document.getElementById("report").onclick = () => incidentDialog.showModal();
+        document.getElementById("closeIncident").onclick = () => incidentDialog.close();
+        document.getElementById("submitReport").onclick = () => incidentDialog.close();
 
         document.getElementById("resetMapButton").onclick = () => {
-            fetch("/reset_map", { method: "POST" })
-                .then(() => reloadMap("/static/berlin_map.html"));
+            fetch("/reset_map", { method: "POST" }).then(() => {
+                mapFrame.src = "/static/berlin_map.html?t=" + Date.now();
+            });
         };
 
-
         const routeDialog = document.getElementById("routeDialog");
-        const routeButton = document.getElementById("routeButton");
-        const closeRouteDialogBtn = document.getElementById("closeRouteDialogBtn");
-        const startRouteBtn = document.getElementById("startRouteBtn");
         const routeStatus = document.getElementById("routeStatus");
 
-        routeButton.onclick = () => {
+        document.getElementById("routeButton").onclick = () => {
             routeStatus.textContent = "";
             routeDialog.showModal();
         };
 
-        closeRouteDialogBtn.onclick = () => routeDialog.close();
+        document.getElementById("closeRoute").onclick = () => routeDialog.close();
 
-        startRouteBtn.onclick = async () => {
-            routeStatus.textContent = "Starting route calculation…";
-
-            const payload = {
-                city_query: "Utrecht, Netherlands",
-                travel_mode: "bike",
-                start_latlon: [
-                    parseFloat(document.getElementById("startLat").value),
-                    parseFloat(document.getElementById("startLon").value)
-                ],
-                end_latlon: [
-                    parseFloat(document.getElementById("endLat").value),
-                    parseFloat(document.getElementById("endLon").value)
-                ],
-                avoid_radius_m: document.getElementById("avoidRadius").value,
-                penalty_multiplier: document.getElementById("penaltyMultiplier").value
-            };
+        document.getElementById("startRoute").onclick = async () => {
+            routeStatus.textContent = "Calculating route… this may take ~45 seconds";
 
             const res = await fetch("/start_route", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({
+                    city_query: "Utrecht, Netherlands",
+                    travel_mode: "bike",
+                    start_address: startAddress.value,
+                    end_address: endAddress.value,
+                    avoid_radius_m: avoidRadius.value,
+                    penalty_multiplier: penaltyMultiplier.value
+                })
             });
 
             const { job_id } = await res.json();
-            pollRouteStatus(job_id);
+            pollRoute(job_id);
         };
 
-        async function pollRouteStatus(jobId) {
-            routeStatus.textContent = "Calculating route (this may take ~45 seconds)…";
-
+        function pollRoute(jobId) {
             const interval = setInterval(async () => {
                 const res = await fetch(`/route_status/${jobId}`);
                 const data = await res.json();
 
                 if (data.status === "done") {
                     clearInterval(interval);
-                    routeStatus.textContent = "Route ready!";
                     routeDialog.close();
-                    reloadMap("/static/route.html");
+                    mapFrame.src = "/static/route.html?t=" + Date.now();
                 }
 
                 if (data.status === "error") {
                     clearInterval(interval);
-                    routeStatus.textContent = "Error: " + data.error;
+                    routeStatus.textContent = data.error;
                 }
             }, 2000);
         }

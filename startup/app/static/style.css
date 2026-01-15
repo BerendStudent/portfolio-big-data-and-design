@@ -103,3 +103,9 @@ form input {
     background: #2a2f3d;
     color: var(--text);
 }
+
+#routeButton {
+    bottom: 152px;
+    background: #00a86b;
+    color: black;
+}
