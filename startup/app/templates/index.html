@@ -9,9 +9,12 @@
 
     <iframe id="mapFrame" src="/static/berlin_map.html"></iframe>
 
-    <button id="routeButton" class="fab">Route</button>
-    <button id="report" class="fab">Report</button>
-    <button id="resetMapButton" class="fab">Reset map</button>
+    <div class="fab-bar">
+        <button id="routeButton" class="fab">Route</button>
+        <button id="report" class="fab">Report</button>
+        <button id="resetMapButton" class="fab">Reset</button>
+    </div>
+
 
     <dialog id="incidentDialog">
         <form method="POST" action="/add_point">

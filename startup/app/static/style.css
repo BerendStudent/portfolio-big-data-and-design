@@ -1,10 +1,11 @@
 :root {
-    --bg: #0f1115;
-    --panel: #1b1f2a;
-    --accent: #ff8c00;
+    --bg: #0b0d10;
+    --panel: #161a22;
+    --accent: #00e676;
     --text: #ffffff;
-    --muted: #9aa0b4;
+    --muted: #8f97ab;
 }
+
 
 body {
     margin: 0;
@@ -24,8 +25,6 @@ iframe {
 }
 
 .fab {
-    position: fixed;
-    right: 16px;
     padding: 14px 18px;
     border-radius: 999px;
     border: none;
@@ -36,13 +35,11 @@ iframe {
 }
 
 #report {
-    bottom: 88px;
     background: var(--accent);
     color: black;
 }
 
 #resetMapButton {
-    bottom: 24px;
     background: var(--panel);
     color: var(--text);
 }
@@ -105,7 +102,18 @@ form input {
 }
 
 #routeButton {
-    bottom: 152px;
     background: #00a86b;
     color: black;
+}
+
+.fab-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 12px;
+
+    z-index: 1000;
 }
