@@ -1,7 +1,7 @@
 :root {
     --bg: #0b0d10;
     --panel: #161a22;
-    --accent: #00e676;
+    --accent: #ff3860;
     --text: #ffffff;
     --muted: #8f97ab;
 }
@@ -36,7 +36,7 @@ iframe {
 
 #report {
     background: var(--accent);
-    color: black;
+    color: var(--text);
 }
 
 #resetMapButton {
@@ -102,8 +102,8 @@ form input {
 }
 
 #routeButton {
-    background: #00a86b;
-    color: black;
+    background: #ff7eb3;
+    color: var(--text);
 }
 
 .fab-bar {
